@@ -45,15 +45,45 @@
             return raw;
         }
 
+        function heightSort(a, b, attr, direction) {
+            var a_height = a[attr];
+            var b_height = b[attr];
+
+            var a_num = Number(a_height.substr(0, a_height.length-1))
+            var b_num = Number(b_height.substr(0, b_height.length-1))
+
+            // Javascript hates infinites, so we just use 1e8 instead.  It's
+            // close enough to infinity... right?
+            if (isNaN(a_num)) {
+                a_num = 1e8;
+            }
+            if (isNaN(b_num)) {
+                b_num = 1e8;
+            }
+
+            console.log(a[attr], a_num);
+
+            var comparison = a_num - b_num;
+            return direction > 0 ? comparison : -comparison;
+        }
+
         $.getJSON('plant_data.json', function(data) {
-            $('#plant-table').dynatable({
-                dataset: {
-                    records: data
-                } ,
-                writers: {
-                    _attributeWriter: attributeWriter,
-                },
-            });
+            $('#plant-table')
+                .bind('dynatable:init', function(e, dynatable) {
+                    dynatable.sorts.functions["heightSort"] = heightSort;
+                })
+                .dynatable({
+                    dataset: {
+                        records: data,
+                        sortTypes: {
+                            height_min: 'heightSort',
+                            height_max: 'heightSort',
+                        },
+                    } ,
+                    writers: {
+                        _attributeWriter: attributeWriter,
+                    },
+                });
 
         });
 
