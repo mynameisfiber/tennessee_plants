@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<head>
+    <title>Tennessee Plant Directory</title>
+    <link href="assets/jquery.dynatable.css" rel="stylesheet" type="text/css" />
+    <link href="assets/looks.css" rel="stylesheet" type="text/css" />
+    <script src="assets/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="assets/jquery.dynatable.js" type="text/javascript"></script>
+</head>
+<body>
+<a href="https://github.com/mynameisfiber/tennessee_plants"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+    <h1>Tennessee Plant Directory</h1>
+    <p>Data taken from the <a href="http://www.tva.gov/cgi-bin/plantDB/searchNativePlants.pl?showAll=1&sort=Common">Tennessee Valley Authority</a> website.  CSS and most of the javascript taken from <a href="http://dynatable.com">dynatable</a>.  The rest was hacked together by <a href="http://micha.gd">micha</a>.</p>
+
+    <table id="plant-table">
+        <thead>
+            <th data-dynatable-column="common_name">Common Name</th>
+            <th data-dynatable-column="scientific_name">Scientific Name</th>
+            <th data-dynatable-column="native_region">Region</th>
+            <th data-dynatable-column="light_preference">Light</th>
+            <th data-dynatable-column="bloom_time">Bloom Time</th>
+            <th data-dynatable-column="evergreen">Evergreen</th>
+            <th data-dynatable-column="moisture_conditions">Moisture</th>
+            <th data-dynatable-column="soil_ph">PH</th>
+            <th data-dynatable-column="wildlife_value">Wildlife</th>
+            <th data-dynatable-column="comments">Comments</th>
+            <th data-dynatable-column="height_min">Min Height</th>
+            <th data-dynatable-column="height_max">Max Height</th>
+            <th data-dynatable-column="picture"></th>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script type="text/javascript">
+        function attributeWriter(record) {
+            var label = this.id;
+            var raw = record[this.id];
+            if (label == "picture") {
+                return "<a href='" + raw + "'><img class='thumbnail' src='" + raw + "'></a>";
+            } else if (label == "comments") {
+                return "<div class=overflow>" + raw + "</div>";
+            } else if (label == "common_name") {
+                return "<a href='" + record.url + "'>" + raw + "</a>";
+            }
+            return raw;
+        }
+
+        $.getJSON('plant_data.json', function(data) {
+            $('#plant-table').dynatable({
+                dataset: {
+                    records: data
+                } ,
+                writers: {
+                    _attributeWriter: attributeWriter,
+                },
+            });
+
+        });
+
+    </script>
+</body>
