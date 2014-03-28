@@ -37,9 +37,10 @@
             <td ng-repeat="col in cols">
                 <div ng-if="col.id === 'picture'">
                     <img class='thumbnail' src="{{plant[col.id]}}" ng-click="setPic(plant[col.id])"/>
+                    <a href="https://www.google.com/search?q={{plant['common_name']}}&tbm=isch" target="_blank">more images</a>
                 </div>
                 <div ng-if="col.id === 'common_name'">
-                    <a href="{{plant.url}}">
+                    <a href="{{plant.url}}" target="_blank">
                         {{plant[col.id]}}
                     </a>
                 </div>

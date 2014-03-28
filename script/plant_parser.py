@@ -1,14 +1,24 @@
 #!/usr/bin/env python2.7
 
-from urlparse import urljoin
+import sys
+
+if sys.version_info.major == 3:
+    from urllib.parse import urljoin
+else:
+    from urlparse import urljoin
+
 from lxml import html
 import re
-import ujson as json
+
+try:
+    import ujson as json
+except ImportError:
+    import json
 
 URLPATH= "http://www.tva.gov/cgi-bin/plantDB/searchNativePlants.pl?showAll=1&sort=Common"
 
 def parse_file(filepath):
-    print "Parsing:", filepath
+    print("Parsing: {}".format(filepath))
 
     url = urljoin(URLPATH, filepath)
     dom = html.parse(url).getroot()
@@ -49,5 +59,5 @@ if __name__ == "__main__":
     base_data = html.parse(URLPATH).getroot()
     plants = base_data.xpath('.//a[contains(@href,"plants")]/@href')
 
-    data = map(parse_file, plants)
+    data = list(map(parse_file, plants))
     json.dump(data, open("plant_data.json", "w+"))
